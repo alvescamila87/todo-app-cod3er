@@ -19,7 +19,13 @@ export default props => (
     // forma 2: usando componente
     <div role="form" className="todoForm">
         <Grid cols="12 9 10">
-            <input id="description" className="form-control" placeholder="Add a new task"></input>
+            <input 
+                id="description" 
+                className="form-control" 
+                placeholder="Add a new task"
+                onChange={props.handleChange}
+                value={props.description}
+            ></input>
         </Grid>
 
         <Grid cols="12 3 2">
