@@ -1,4 +1,5 @@
 import React from "react";
+import If from './if'
 
 // renderizaão condicional a partir do hide
 export default props => (
