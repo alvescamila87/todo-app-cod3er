@@ -19,6 +19,22 @@ export default class Todo extends Component {
         // para não ter problema do this (null) e ser sempre do componente atual (todo)
         this.handleChange = this.handleChange.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
+        this.handleRemove = this.handleRemove.bind(this)
+
+        this.refresh()
+    }
+
+    // remover item de tarefa da lista
+    handleRemove(todo) {
+        axios.delete(`${URL}/${todo._id}`)
+            .then(resp => this.refresh())
+    }
+
+    // atualizar lista de tarefas
+    refresh() {
+        axios.get(`${URL}?sort=-createdAt`)
+            //.then(resp => console.log(resp.data))
+            .then(resp => this.setState({...this.state, description: '', list: resp.data}))
     }
 
     // receber o evento, sempre que o usuário digitar no input
@@ -31,7 +47,8 @@ export default class Todo extends Component {
         //console.log(this.state.description)
         const description = this.state.description
         axios.post(URL, { description })
-            .then(resp => console.log('Funcionou!'))
+            //.then(resp => console.log('Funcionou!'))
+            .then(resp => this.refresh())
     }
 
     render() {
@@ -41,8 +58,12 @@ export default class Todo extends Component {
                 <TodoForm 
                     description={this.state.description}
                     handleChange={this.handleChange}
-                    handleAdd={this.handleAdd} />
-                <TodoList />
+                    handleAdd={this.handleAdd}                     
+                />
+                <TodoList 
+                    list={this.state.list}
+                    handleRemove={this.handleRemove}
+                />
             </div>
         )
     }
