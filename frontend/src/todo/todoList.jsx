@@ -7,12 +7,25 @@ export default props => {
         const list = props.list || []
         return list.map(todo => (
             <tr key={todo._id}>
-                <td>{todo.description}</td>
+                <td className={todo.done ? 'markedAsDone' : ''}>{todo.description}</td>
                 <td>
+                    <IconButton 
+                        style="success"
+                        icon="check"
+                        hide={todo.done}
+                        onClick={() => props.handleMarkAsDone(todo)} // retorna a função, não o resultado da função
+                    />
+                    <IconButton 
+                        style="warning"
+                        icon="undo"
+                        hide={!todo.done}
+                        onClick={() => props.handleMarkAsPending(todo)} // retorna a função, não o resultado da função
+                    />
                     <IconButton 
                         style="danger" 
                         icon="trash-o" 
-                        onClick={() => props.handleRemove(todo)}
+                        //hide={!todo.done}
+                        onClick={() => props.handleRemove(todo)} // retorna a função, não o resultado da função
                     />
                 </td>
             </tr>

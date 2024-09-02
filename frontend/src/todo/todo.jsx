@@ -19,22 +19,24 @@ export default class Todo extends Component {
         // para não ter problema do this (null) e ser sempre do componente atual (todo)
         this.handleChange = this.handleChange.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
+        this.handleSearch = this.handleSearch.bind(this)
         this.handleRemove = this.handleRemove.bind(this)
+        this.handleMarkAsDone = this.handleMarkAsDone.bind(this)
+        this.handleMarkAsPending = this.handleMarkAsPending.bind(this)
 
         this.refresh()
     }
 
-    // remover item de tarefa da lista
-    handleRemove(todo) {
-        axios.delete(`${URL}/${todo._id}`)
-            .then(resp => this.refresh())
+    // atualizar lista de tarefas
+    refresh(description = '') {
+        const search = description ? `&description__regex=/${description}/` : ''
+        axios.get(`${URL}?sort=-createdAt${search}`)
+            //.then(resp => console.log(resp.data))
+            .then(resp => this.setState({...this.state, description, list: resp.data}))
     }
 
-    // atualizar lista de tarefas
-    refresh() {
-        axios.get(`${URL}?sort=-createdAt`)
-            //.then(resp => console.log(resp.data))
-            .then(resp => this.setState({...this.state, description: '', list: resp.data}))
+    handleSearch() {
+       this.refresh(this.state.description) 
     }
 
     // receber o evento, sempre que o usuário digitar no input
@@ -51,6 +53,24 @@ export default class Todo extends Component {
             .then(resp => this.refresh())
     }
 
+    // remover item de tarefa da lista
+    handleRemove(todo) {
+        axios.delete(`${URL}/${todo._id}`)
+           .then(resp => this.refresh(this.state.description)) // mantém a descrição após remoção
+    }
+
+    // marcar tarefa como feita
+    handleMarkAsDone(todo) {
+        axios.put(`${URL}/${todo._id}`, { ...todo, done: true })
+            .then(resp => this.refresh(this.state.description)) // mantém a descrição após remoção
+    }
+
+    // desfazer o que foi feito de done
+    handleMarkAsPending(todo) {
+        axios.put(`${URL}/${todo._id}`, { ...todo, done: false })
+            .then(resp => this.refresh(this.state.description)) // mantém a descrição após remoção
+    }
+
     render() {
         return (
             <div>
@@ -58,11 +78,14 @@ export default class Todo extends Component {
                 <TodoForm 
                     description={this.state.description}
                     handleChange={this.handleChange}
-                    handleAdd={this.handleAdd}                     
+                    handleAdd={this.handleAdd}  
+                    handleSearch={this.handleSearch}               
                 />
                 <TodoList 
                     list={this.state.list}
                     handleRemove={this.handleRemove}
+                    handleMarkAsDone={this.handleMarkAsDone}
+                    handleMarkAsPending={this.handleMarkAsPending}
                 />
             </div>
         )
