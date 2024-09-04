@@ -40,7 +40,7 @@ export const search = () => {
 export const add = (description) => {
     return dispatch => {
         axios.post(URL, { description })
-            .then(resp => dispatch({ type: 'TODO_ADDED', payload: resp.data}))
+            .then(resp => dispatch(clear()))
             .then(resp => dispatch(search()))
     }
 }
@@ -61,4 +61,17 @@ export const markAsPending = (todo) => {
             //.then(resp => dispatch({type: 'TODO_MARKED_AS_PENDING', payload: resp.data}))
             .then(resp => dispatch(search()))
     }
+}
+
+//actionCreator 5 - todoList
+export const remove = (todo) => {
+    return dispatch => {
+        axios.delete(`${URL}/${todo._id}`)
+        .then(resp => dispatch(search()))
+    }
+}
+
+//actionCreator 6 - todoList
+export const clear = () => {
+    return { type: 'TODO_CLEAR' }
 }

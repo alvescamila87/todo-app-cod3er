@@ -28,7 +28,8 @@ export default (state = INITIAL_STATE, action) => {
         case 'TODO_SEARCHED':
             return { ...state, list: action.payload.data } // precisa colocar middleware
         case 'TODO_ADDED':
-            return { ...state, description: ''}
+        case 'TODO_CLEAR':
+            return { ...state, description: '' }
         default:
             return state
     }
