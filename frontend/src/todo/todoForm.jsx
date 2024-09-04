@@ -1,8 +1,9 @@
 import React from "react";
 import Grid from "../template/grid";
 import IconButton from "../template/iconButton";
+import { connect } from 'react-redux'
 
-export default props => {
+function TodoForm(props) {
     // forma 1
     // <div role="form" className="todoForm">
     //     <div className="col-xs-12 col-sm-9 col-md-10">
@@ -59,3 +60,12 @@ export default props => {
         </div>
     )
 }
+
+function mapStateToProps(state){
+    return {
+        description: state.todo.description
+    }
+}
+
+export default connect(mapStateToProps)(TodoForm)
+
