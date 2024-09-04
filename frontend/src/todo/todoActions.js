@@ -25,10 +25,19 @@ export const search = () => {
 }
 
 //actionCreator 3 - com promise
+// export const add = (description) => {
+//     const request = axios.post(URL, { description })
+//     return [
+//         { type: 'TODO_ADDED', payload: request },
+//         search()
+//     ]
+// }
+
+//actionCreator 3 - versão com thunk redux para retornar um metodo ao invés de action
 export const add = (description) => {
-    const request = axios.post(URL, { description })
-    return [
-        { type: 'TODO_ADDED', payload: request },
-        search()
-    ]
+    return dispatch => {
+        axios.post(URL, { description })
+            .then(resp => dispatch({ type: 'TODO_ADDED', payload: resp.data}))
+            .then(resp => dispatch(search()))
+    }
 }
