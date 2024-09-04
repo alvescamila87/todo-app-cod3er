@@ -22,10 +22,9 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch(action.type) {
         case 'DESCRIPTION_CHANGED':
-            return {
-                ...state,
-                description: action.payload
-            }
+            return { ...state, description: action.payload }
+        case 'TODO_SEARCHED':
+            return { ...state, list: action.payload.data } // precisa colocar middleware
         default:
             return state
     }
